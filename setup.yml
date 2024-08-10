@@ -1,0 +1,62 @@
+name: frr-evpn-vxlan
+
+mgmt:
+  network: br-frr-evpn-vxlan
+  ipv4-subnet: 172.28.1.0/24
+
+topology:
+  nodes:
+
+   # spine switches
+    spine01:
+      kind: linux
+      image: frrouting/frr:v8.4.0
+      mgmt-ipv4: 172.28.1.2
+      binds:
+        - spine01/daemons:/etc/frr/daemons
+        - spine01/frr.conf:/etc/frr/frr.conf
+        - spine01/vtysh.conf:/etc/frr/vtysh.conf
+    spine02:
+      kind: linux
+      image: frrouting/frr:v8.4.0
+      mgmt-ipv4: 172.28.1.3
+      binds:
+        - spine02/daemons:/etc/frr/daemons
+        - spine02/frr.conf:/etc/frr/frr.conf
+        - spine02/vtysh.conf:/etc/frr/vtysh.conf
+    
+    # leaf switches
+    leaf01:
+      kind: linux
+      image: frrouting/frr:v8.4.0
+      mgmt-ipv4: 172.28.1.4
+      binds:
+        - leaf01/daemons:/etc/frr/daemons
+        - leaf01/frr.conf:/etc/frr/frr.conf
+        - leaf01/vtysh.conf:/etc/frr/vtysh.conf
+    leaf02:
+      kind: linux
+      image: frrouting/frr:v8.4.0
+      mgmt-ipv4: 172.28.1.5
+      binds:
+        - leaf02/daemons:/etc/frr/daemons
+        - leaf02/frr.conf:/etc/frr/frr.conf
+        - leaf02/vtysh.conf:/etc/frr/vtysh.conf
+
+    # clients
+    client1:
+      kind: linux
+      image: wbitt/network-multitool:alpine-extra
+      mgmt-ipv4: 172.28.1.6
+    client2:
+      kind: linux
+      image: wbitt/network-multitool:alpine-extra
+      mgmt-ipv4: 172.28.1.7
+
+  links:
+    - endpoints: ["leaf01:eth1", "spine01:eth1"]
+    - endpoints: ["leaf01:eth2", "spine02:eth1"]
+    - endpoints: ["leaf02:eth1", "spine01:eth2"]
+    - endpoints: ["leaf02:eth2", "spine02:eth2"]
+    - endpoints: ["client1:eth1", "leaf01:eth3"]
+    - endpoints: ["client2:eth1", "leaf02:eth3"]
