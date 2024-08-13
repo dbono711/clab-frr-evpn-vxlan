@@ -174,3 +174,13 @@ make clean
 ## Logging
 
 All activity is logged to a file called ```setup.log``` at the root of the repository.
+
+## Authors
+
+- Darren Bono - [darren.bono@att.net](mailto://darren.bono@att.net)
+
+<a href="https://buymeacoffee.com/darrenbono" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE) for details
