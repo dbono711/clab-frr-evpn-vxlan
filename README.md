@@ -80,11 +80,11 @@ make all
 **_NOTE: CONTAINERlab requires SUDO privileges in order to execute_**
 
 - Initializes the ```setup.log``` file
-- Creates the CONTAINERlab network based on the [setup.yml](setup.yml) [topology definition](https://containerlab.dev/manual/topo-def-file/)
-  - The FRR configuration is bound to the respective ```spine``` and ```leaf``` nodes in the topology definition at startup
-- Loops through each client to execute the respective configuration SHELL scripts within the [clients](clients) folder
+- Creates the CONTAINERlab [network](setup.yml) based on the [topology definition](https://containerlab.dev/manual/topo-def-file/)
+  - The FRR configuration is bound to the ```spine``` and ```leaf``` nodes in the topology definition at startup
+- Loops through each client to execute the configuration SHELL scripts within the [clients](clients) folder
   - The script configures the Ethernet/VLAN interface connected to the leaf
-- Loops through each switch to execute the respective configuration SHELL script within the ```spine``` and ```leaf``` folders
+- Loops through each switch to execute the configuration SHELL script within the ```spine``` and ```leaf``` folders
   - The script configures the Linux-level Ethernet, Dummy, VXLAN, and Bridge interfaces; leaving the IP configuration to FRR
 - Executes a PING from ```client1``` to ```client2``` to validate data plane connectivity between clients over the VNI
 
@@ -119,8 +119,6 @@ spine01#
 ```
 
 ## Validating Routing & Switching operation on FRR nodes
-
-**_NOTE: Various Linux configurations are being applied to create the necessary Linux bridges, VXLAN interfaces, and Ethernet sub-interfaces for client connectivity, which are then integrated into FRR’s EVPN and MAC-VRF tables. They can be analyzed within the respective ```clients```, ```spine```, or ```leaf``` folders. However, this section is primarily focused on the operational commands pertaining to FRR._**
 
 **_NOTE: All subsequent commands assume that you are able to access the FRR CLI (VTYSH) per [Accessing the container FRR CLI (VTYSH)](#accessing-the-container-frr-cli-vtysh)_**
 
@@ -178,8 +176,6 @@ All activity is logged to a file called ```setup.log``` at the root of the repos
 ## Authors
 
 - Darren Bono - [darren.bono@att.net](mailto://darren.bono@att.net)
-
-<a href="https://buymeacoffee.com/darrenbono" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 ## License
 
