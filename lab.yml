@@ -117,7 +117,7 @@ topology:
       image: wbitt/network-multitool:alpine-extra
       mgmt-ipv4: 172.28.1.11
       binds:
-        - internet/internet.sh:/tmp/internet.sh
+        - clients/internet.sh:/tmp/internet.sh
       exec:
         - bash /tmp/internet.sh
 

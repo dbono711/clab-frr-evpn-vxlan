@@ -30,5 +30,7 @@ ip link add name bond0.10 link bond0 type vlan id 10
 ip addr add 10.10.1.2/24 dev bond0.10
 # Add route to Tenant20
 ip route add 10.20.1.0/24 via 10.10.1.1
+# Add route to Internet
+ip route add 99.99.99.0/30 via 10.10.1.1
 # Activate Tenant10 service interface
 ip link set dev bond0.10 up
