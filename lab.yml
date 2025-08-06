@@ -112,6 +112,14 @@ topology:
         - clients/client3.sh:/tmp/client3.sh
       exec:
         - bash /tmp/client3.sh
+    internet:
+      kind: linux
+      image: wbitt/network-multitool:alpine-extra
+      mgmt-ipv4: 172.28.1.11
+      binds:
+        - internet/internet.sh:/tmp/internet.sh
+      exec:
+        - bash /tmp/internet.sh
 
   links:
     - endpoints: ["leaf01:eth1", "spine01:eth1"]
@@ -121,6 +129,7 @@ topology:
     - endpoints: ["leaf03:eth1", "spine01:eth3"]
     - endpoints: ["leaf03:eth2", "spine02:eth3"]
     - endpoints: ["gateway:eth1", "leaf03:eth3"]
+    - endpoints: ["internet:eth1", "gateway:eth2"]
     
     # dual-homed clients
     - endpoints: ["client1:eth1", "leaf01:eth3"]
