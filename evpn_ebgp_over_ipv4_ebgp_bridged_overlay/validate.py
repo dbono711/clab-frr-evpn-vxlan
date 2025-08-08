@@ -14,7 +14,6 @@ def ping(ip_address: str, container) -> str:
     Returns:
         str: Status.
     """
-    print(f"Pinging client2 ({ip_address}) from client1 over VNI 110...", end="")
     reply = subprocess.run(
         [
             "docker",
@@ -23,7 +22,7 @@ def ping(ip_address: str, container) -> str:
             f"{container}",
             "bash",
             "-c",
-            f"ping -c 1 -n {ip_address}",
+            f"ping -c 3 -n {ip_address}",
         ],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -38,4 +37,11 @@ def ping(ip_address: str, container) -> str:
 
 
 if __name__ == "__main__":
-    ping("10.10.1.2", "clab-frr-evpn-vxlan-client1")
+    print("Pinging gateway 10.10.1.1 from client1 over VNI 10...", end="")
+    ping("10.10.1.1", "clab-frr-evpn-vxlan-client1")
+
+    print("Pinging client3 10.10.1.3 from client1 over VNI 10...", end="")
+    ping("10.10.1.3", "clab-frr-evpn-vxlan-client1")
+
+    print("Pinging gateway 10.20.1.1 from client2 over VNI 20...", end="")
+    ping("10.20.1.1", "clab-frr-evpn-vxlan-client2")
