@@ -86,7 +86,7 @@ _The **Overlay/VTEP** assignments for spine01/spine02 are not actually implement
 | 10  | RED  | 10.10.1.0/24 | leaf01 | client1 | 10.10.1.2 | 10   | 10.10.1.1 |
 | 10  | RED  | 10.10.1.0/24 | leaf02 | client1 | 10.10.1.2 | 10   | 10.10.1.1 |
 | 10  | RED  | 10.10.1.0/24 | leaf02 | client3 | 10.10.1.3 | 10   | 10.10.1.1 |
-| 20  | BLUE | 10.20.1.0/24 | leaf02 | client2 | 10.20.1.1 | 20   | 10.20.1.1 |
+| 20  | BLUE | 10.20.1.0/24 | leaf01 | client2 | 10.20.1.1 | 20   | 10.20.1.1 |
 
 ## Deployment
 
