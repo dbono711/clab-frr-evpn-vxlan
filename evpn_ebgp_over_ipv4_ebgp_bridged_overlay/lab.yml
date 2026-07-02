@@ -10,7 +10,7 @@ topology:
    # spine switches
     spine01:
       kind: linux
-      image: quay.io/frrouting/frr:master
+      image: quay.io/frrouting/frr:10.6.1
       mgmt-ipv4: 172.28.1.2
       binds:
         - logs:/etc/frr/logs
@@ -22,7 +22,7 @@ topology:
         - bash /config/spine01.sh
     spine02:
       kind: linux
-      image: quay.io/frrouting/frr:master
+      image: quay.io/frrouting/frr:10.6.1
       mgmt-ipv4: 172.28.1.3
       binds:
         - logs:/etc/frr/logs
@@ -31,12 +31,12 @@ topology:
         - spine02/vtysh.conf:/etc/frr/vtysh.conf
         - spine02/spine02.sh:/config/spine02.sh
       exec:
-        - bash /config/spine02.sh    
-    
+        - bash /config/spine02.sh
+
     # compute leaf switches
     leaf01:
       kind: linux
-      image: quay.io/frrouting/frr:master
+      image: quay.io/frrouting/frr:10.6.1
       mgmt-ipv4: 172.28.1.4
       binds:
         - logs:/etc/frr/logs
@@ -48,7 +48,7 @@ topology:
         - bash /config/leaf01.sh
     leaf02:
       kind: linux
-      image: quay.io/frrouting/frr:master
+      image: quay.io/frrouting/frr:10.6.1
       mgmt-ipv4: 172.28.1.5
       binds:
         - logs:/etc/frr/logs
@@ -58,11 +58,11 @@ topology:
         - leaf02/leaf02.sh:/config/leaf02.sh
       exec:
         - bash /config/leaf02.sh
-    
+
     # border leaf switches
     leaf03:
       kind: linux
-      image: quay.io/frrouting/frr:master
+      image: quay.io/frrouting/frr:10.6.1
       mgmt-ipv4: 172.28.1.6
       binds:
         - logs:/etc/frr/logs
@@ -72,11 +72,11 @@ topology:
         - leaf03/leaf03.sh:/config/leaf03.sh
       exec:
         - bash /config/leaf03.sh
-    
+
     # gateway
     gateway:
       kind: linux
-      image: quay.io/frrouting/frr:master
+      image: quay.io/frrouting/frr:10.6.1
       mgmt-ipv4: 172.28.1.7
       binds:
         - logs:/etc/frr/logs
@@ -130,7 +130,7 @@ topology:
     - endpoints: ["leaf03:eth2", "spine02:eth3"]
     - endpoints: ["gateway:eth1", "leaf03:eth3"]
     - endpoints: ["internet:eth1", "gateway:eth2"]
-    
+
     # dual-homed clients
     - endpoints: ["client1:eth1", "leaf01:eth3"]
     - endpoints: ["client1:eth2", "leaf02:eth3"]

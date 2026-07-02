@@ -11,7 +11,10 @@ ip link set dev lo1 up
 
 # EVPN Multi-Homing Configuration
 # Configure bond interface for client1 dual-homing (eth3 connects to client1)
-ip link add dev mhbond1 type bond                    # Create LACP bond for client1 multi-homing
+# NOTE: no "mode" is passed, so this is Linux's default balance-rr bond, not
+# 802.3ad/LACP; the EVPN Ethernet Segment config below is what drives actual
+# multi-homing/DF-election with leaf02, independent of the local bond mode
+ip link add dev mhbond1 type bond                    # Create bond for client1 multi-homing
 ip link set dev eth3 down                           # Prepare eth3 (client1 connection) for bonding
 ip link set dev mhbond1 down                        # Prepare bond interface for configuration
 ip link set dev eth3 master mhbond1                 # Add eth3 to bond (dual-homed with leaf02)
