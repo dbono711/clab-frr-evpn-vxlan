@@ -1,0 +1,39 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+{
+  "manifestVersion": "2.0.0",
+  "signatureType": "grafana",
+  "signedByOrg": "grafana",
+  "signedByOrgName": "Grafana Labs",
+  "plugin": "grafana-clickhouse-datasource",
+  "version": "4.13.0",
+  "time": 1769527195091,
+  "keyId": "7e4d0c6a708866e7",
+  "files": {
+    "LICENSE": "cdd15e614b50e88443fe574ad56bde5ba697d958a45376431638eea816e3bfc3",
+    "module.js": "6c9403803d32e77af06a8caf377a55af398f273546ba700dc410814426b69a75",
+    "CHANGELOG.md": "7735a99f9c2ea5a50e57720edf95ddb8a0b2aaaa50522dc8c5dd56a8b055021c",
+    "plugin.json": "a5b514a487d5f9ec3167f1b9fd2b5f53c5eaa05790af8226c095c9d449b86c73",
+    "dashboards/opentelemetry-clickhouse.json": "f9f79f7d2c1059f842ddddddebd810f538fb619621c5dbd0e0fd85bcd2ac2914",
+    "dashboards/data-analysis.json": "15c4ea2dbaf906dffbb6845eb9c9c3299e6fbd614db356db5e3655263a76c7a4",
+    "dashboards/query-analysis.json": "1b2006a3f4142e512e50156a7d2fd8cf03a178019aaccc964c0283c8559298b3",
+    "dashboards/cluster-analysis.json": "7f83d4d09cc6f045768f5bf47485b864dd6da03094f8607808dec77cb96902e5",
+    "dashboards/system-dashboards.json": "017881431af913d3c8f776b4dab51e8a153745b016a964bb1ec3c99f52704af4",
+    "module.js.map": "ca6d18cce4516f579eaf9e96da6ac7847553a971d5b46ff096b0aeeea04c97fd",
+    "gpx_clickhouse_linux_arm64": "a85bf9d89dc1d4a43dd80ddf39e5d734f803ee20c7e4d447714901d4a77cdc1c",
+    "README.md": "6b64dae8d0a67541d086c4d974c25df785aedf7b6acd628b71acd3a13d95902e",
+    "go_plugin_build_manifest": "d6ddf999cc0d4ca7a701cc23a13ac1abd539cab502b38d164c0ef192a9983082",
+    "img/logo.svg": "838199055d86584ff105e5e91013203a6acb7d3f2061ae27678786125ab11f09"
+  }
+}
+-----BEGIN PGP SIGNATURE-----
+
+wsA+BAETCgBtBYJpeNebCRB+TQxqcIhm50UUAAAAAAAcACBzYWx0QG5vdGF0
+aW9ucy5vcGVucGdwanMub3JnB9PaZvJsQ0wd/+fSOb+uEBmV0ahTmgLC7smT
+/KgEiBIWIQTzOyW2kQdOhGNlcPN+TQxqcIhm5wAAwsICCQGvq007xjFxetdj
+zW1u3r+t6niigx9Y/ArRTHiMMBEHkm7ibKbdn0d+j2AqwZ4mTvnpttTmIoOT
+UdfmpzFp+F9XogIIuxE7eSbX+y/e6hzzvuI0n9tEcgTdnHbbDKrwk8E6pVUZ
+dd18qJut2BqWLFEQ6qxTICY3cOjbTIryxfOM3JQAeVA=
+=FKnd
+-----END PGP SIGNATURE-----

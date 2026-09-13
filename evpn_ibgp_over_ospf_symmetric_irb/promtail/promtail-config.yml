@@ -1,0 +1,18 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+    # compression: gzip
+    # batchsize: 500000 # Decrease batch size (default is 1 MB)
+    # batchwait: 5s     # Increase wait time before sending batches
+
+scrape_configs:
+  - job_name: router_logs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: router_logs
+          __path__: /var/log/*.log
