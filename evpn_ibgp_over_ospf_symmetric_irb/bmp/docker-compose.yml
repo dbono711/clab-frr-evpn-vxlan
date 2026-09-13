@@ -1,0 +1,110 @@
+networks:
+  clab_net:
+    external: true
+    name: br-frr-evpn-vxlan
+
+services:
+  kafka:
+    container_name: kafka
+    image: apache/kafka-native:3.9.0
+    networks:
+      - clab_net
+    ports:
+      - "9092:9092"
+    environment:
+      # listeners = the sockets Kafka binds to inside the container.
+      # we expose two broker endpoints because clients differ:
+      # - HOST is for tools running on your laptop (maps to localhost:9092)
+      # - DOCKER is for containers on the clab network (use kafka:9093)
+      # CONTROLLER is a dedicated endpoint required by KRaft for controller quorum traffic.
+      KAFKA_LISTENERS: CONTROLLER://localhost:9091,HOST://0.0.0.0:9092,DOCKER://0.0.0.0:9093
+      # advertised.listeners = what clients are told to connect to.
+      # without this, clients may get an unroutable address (e.g., container IP).
+      KAFKA_ADVERTISED_LISTENERS: HOST://localhost:9092,DOCKER://kafka:9093
+      # map each listener name to a security protocol (PLAINTEXT for a dev cluster).
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,DOCKER:PLAINTEXT,HOST:PLAINTEXT
+
+      # KRaft mode: required when running without ZooKeeper.
+      # node.id must be unique; process.roles tells this server to act as both broker and controller.
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      # controller.listener.names must match a listener in KAFKA_LISTENERS.
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      # single-node controller quorum: this node votes for itself over the CONTROLLER listener.
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9091
+
+      # Inter-broker traffic (replication, metadata) uses a single listener name.
+      # For a dev single-broker setup this still must be set; we point it to the docker-network listener.
+      KAFKA_INTER_BROKER_LISTENER_NAME: DOCKER
+
+      # Internal Kafka topics (like consumer offsets) need replication settings.
+      # In a one-broker dev cluster this must be 1 or the broker will refuse to create the topic.
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+    # Report healthy only once the broker's client listener is accepting
+    # connections — not merely when the container process has started. Dependents
+    # gate on `condition: service_healthy` so they don't race Kafka's startup.
+    #
+    # apache/kafka-native is a GraalVM native build with NO JVM, so the
+    # kafka-*.sh CLI tools (e.g. kafka-broker-api-versions.sh) can't run — they
+    # invoke `java`, which isn't present, so they fail every probe. Instead we
+    # probe port 9092 directly via bash's /dev/tcp (compiled into this image's
+    # bash). A successful connect means the broker is serving: on this KRaft
+    # single-node broker both listeners enable request processing together, just
+    # after startup, which is exactly what dependents need to connect.
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/9092' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  kafka-ui:
+    container_name: kafka-ui
+    image: ghcr.io/kafbat/kafka-ui:v1.5.0
+    ports:
+      - 9000:8080
+    networks:
+      - clab_net
+    environment:
+      DYNAMIC_CONFIG_ENABLED: 'true'
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9093
+    depends_on:
+      kafka:
+        condition: service_healthy
+
+  bmp-collector:
+    container_name: bmp-collector
+    image: sbezverk/gobmp:latest
+    networks:
+      - clab_net
+    command:
+      - "--source-port=5000"
+      - "--kafka-server=kafka:9093"
+      - "--split-af=true"
+      - "--v=3"
+    depends_on:
+      kafka:
+        condition: service_healthy
+
+  clickhouse:
+    container_name: clickhouse
+    image: clickhouse/clickhouse-server:24.8
+    networks:
+      - clab_net
+    # The Kafka Engine tables in clickhouse-init.sql connect to Kafka at startup,
+    # so wait for the broker to be healthy before ClickHouse initializes.
+    depends_on:
+      kafka:
+        condition: service_healthy
+    ports:
+      - "8123:8123"
+      - "9001:9000"
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    volumes:
+      - ./clickhouse-init.sql:/docker-entrypoint-initdb.d/bmp.sql:ro
+      - ./clickhouse-users.d:/etc/clickhouse-server/users.d:ro

@@ -1,0 +1,214 @@
+name: frr-evpn-vxlan
+
+mgmt:
+  network: br-frr-evpn-vxlan
+  ipv4-subnet: 192.168.1.0/24
+
+topology:
+  kinds:
+    linux:
+      image: quay.io/frrouting/frr:10.7.0
+  nodes:
+
+    # DC01
+    ## Spine Switches
+    dc01spine01:
+      kind: linux
+      mgmt-ipv4: 192.168.1.2
+      binds:
+        - logs:/etc/frr/logs
+        - dc01spine01/daemons:/etc/frr/daemons
+        - dc01spine01/frr.conf:/etc/frr/frr.conf
+        - dc01spine01/vtysh.conf:/etc/frr/vtysh.conf
+        - dc01spine01/dc01spine01.sh:/config/dc01spine01.sh
+      exec:
+        - bash /config/dc01spine01.sh
+
+    dc01spine02:
+      kind: linux
+      mgmt-ipv4: 192.168.1.3
+      binds:
+        - logs:/etc/frr/logs
+        - dc01spine02/daemons:/etc/frr/daemons
+        - dc01spine02/frr.conf:/etc/frr/frr.conf
+        - dc01spine02/vtysh.conf:/etc/frr/vtysh.conf
+        - dc01spine02/dc01spine02.sh:/config/dc01spine02.sh
+      exec:
+        - bash /config/dc01spine02.sh
+
+    ## Leaf Switches
+    dc01leaf01:
+      kind: linux
+      mgmt-ipv4: 192.168.1.4
+      binds:
+        - logs:/etc/frr/logs
+        - dc01leaf01/daemons:/etc/frr/daemons
+        - dc01leaf01/frr.conf:/etc/frr/frr.conf
+        - dc01leaf01/vtysh.conf:/etc/frr/vtysh.conf
+        - dc01leaf01/dc01leaf01.sh:/config/dc01leaf01.sh
+      exec:
+        - bash /config/dc01leaf01.sh
+
+    dc01leaf02:
+      kind: linux
+      mgmt-ipv4: 192.168.1.5
+      binds:
+        - logs:/etc/frr/logs
+        - dc01leaf02/daemons:/etc/frr/daemons
+        - dc01leaf02/frr.conf:/etc/frr/frr.conf
+        - dc01leaf02/vtysh.conf:/etc/frr/vtysh.conf
+        - dc01leaf02/dc01leaf02.sh:/config/dc01leaf02.sh
+      exec:
+        - bash /config/dc01leaf02.sh
+
+    dc01leaf03:
+      kind: linux
+      mgmt-ipv4: 192.168.1.6
+      binds:
+        - logs:/etc/frr/logs
+        - dc01leaf03/daemons:/etc/frr/daemons
+        - dc01leaf03/frr.conf:/etc/frr/frr.conf
+        - dc01leaf03/vtysh.conf:/etc/frr/vtysh.conf
+        - dc01leaf03/dc01leaf03.sh:/config/dc01leaf03.sh
+      exec:
+        - bash /config/dc01leaf03.sh
+
+    ## Border Leaf Switches
+    dc01border01:
+      kind: linux
+      mgmt-ipv4: 192.168.1.7
+      binds:
+        - logs:/etc/frr/logs
+        - dc01border01/daemons:/etc/frr/daemons
+        - dc01border01/frr.conf:/etc/frr/frr.conf
+        - dc01border01/vtysh.conf:/etc/frr/vtysh.conf
+        - dc01border01/dc01border01.sh:/config/dc01border01.sh
+      exec:
+        - bash /config/dc01border01.sh
+
+    dc01border02:
+      kind: linux
+      mgmt-ipv4: 192.168.1.8
+      binds:
+        - logs:/etc/frr/logs
+        - dc01border02/daemons:/etc/frr/daemons
+        - dc01border02/frr.conf:/etc/frr/frr.conf
+        - dc01border02/vtysh.conf:/etc/frr/vtysh.conf
+        - dc01border02/dc01border02.sh:/config/dc01border02.sh
+      exec:
+        - bash /config/dc01border02.sh
+
+    ## Firewall
+    dc01fw01:
+      kind: linux
+      mgmt-ipv4: 192.168.1.9
+      binds:
+        - logs:/etc/frr/logs
+        - dc01fw01/daemons:/etc/frr/daemons
+        - dc01fw01/frr.conf:/etc/frr/frr.conf
+        - dc01fw01/vtysh.conf:/etc/frr/vtysh.conf
+        - dc01fw01/dc01fw01.sh:/config/dc01fw01.sh
+      exec:
+        - bash /config/dc01fw01.sh
+
+    # Provider Network
+    ## Provider Edge
+    pe1:
+      kind: linux
+      mgmt-ipv4: 192.168.1.41
+      binds:
+        - logs:/etc/frr/logs
+        - pe1/daemons:/etc/frr/daemons
+        - pe1/frr.conf:/etc/frr/frr.conf
+        - pe1/vtysh.conf:/etc/frr/vtysh.conf
+        - pe1/pe1.sh:/config/pe1.sh
+      exec:
+        - bash /config/pe1.sh
+
+    ## Clients
+    client1:
+      kind: linux
+      image: wbitt/network-multitool:alpine-extra
+      mgmt-ipv4: 192.168.1.10
+      binds:
+        - clients/client1.sh:/tmp/client1.sh
+      exec:
+        - bash /tmp/client1.sh
+
+    client2:
+      kind: linux
+      image: wbitt/network-multitool:alpine-extra
+      mgmt-ipv4: 192.168.1.11
+      binds:
+        - clients/client2.sh:/tmp/client2.sh
+      exec:
+        - bash /tmp/client2.sh
+
+    client3:
+      kind: linux
+      image: wbitt/network-multitool:alpine-extra
+      mgmt-ipv4: 192.168.1.12
+      binds:
+        - clients/client3.sh:/tmp/client3.sh
+      exec:
+        - bash /tmp/client3.sh
+
+    client4:
+      kind: linux
+      image: wbitt/network-multitool:alpine-extra
+      mgmt-ipv4: 192.168.1.13
+      binds:
+        - clients/client4.sh:/tmp/client4.sh
+      exec:
+        - bash /tmp/client4.sh
+
+    # Monitoring Stack
+    grafana:
+      kind: linux
+      image: grafana/grafana:12.0.2
+      mgmt-ipv4: 192.168.1.231
+      binds:
+        - grafana/provisioning:/etc/grafana/provisioning
+        - grafana/plugins:/var/lib/grafana/plugins
+      ports:
+        - 3000:3000
+      env:
+        GF_SECURITY_ADMIN_PASSWORD: "dci"
+        GF_USERS_ALLOW_SIGN_UP: "false"
+
+    promtail:
+      kind: linux
+      image: grafana/promtail:3.5.2
+      mgmt-ipv4: 192.168.1.233
+      binds:
+        - promtail:/etc/promtail
+        - logs:/var/log
+      cmd: --config.file=/etc/promtail/promtail-config.yml
+
+    loki:
+      kind: linux
+      image: grafana/loki:3.5.2
+      mgmt-ipv4: 192.168.1.234
+      binds:
+        - loki:/etc/loki
+      cmd: --config.file=/etc/loki/loki-config.yml
+
+  links:
+    - endpoints: ["dc01spine01:eth1", "dc01leaf01:eth1"]
+    - endpoints: ["dc01spine01:eth2", "dc01leaf02:eth1"]
+    - endpoints: ["dc01spine01:eth3", "dc01leaf03:eth1"]
+    - endpoints: ["dc01spine01:eth4", "dc01border01:eth1"]
+    - endpoints: ["dc01spine01:eth5", "dc01border02:eth1"]
+    - endpoints: ["dc01spine02:eth1", "dc01leaf01:eth2"]
+    - endpoints: ["dc01spine02:eth2", "dc01leaf02:eth2"]
+    - endpoints: ["dc01spine02:eth3", "dc01leaf03:eth2"]
+    - endpoints: ["dc01spine02:eth4", "dc01border01:eth2"]
+    - endpoints: ["dc01spine02:eth5", "dc01border02:eth2"]
+    - endpoints: ["dc01leaf01:eth3", "client1:eth1"]
+    - endpoints: ["dc01leaf02:eth3", "client1:eth2"]
+    - endpoints: ["dc01leaf03:eth3", "client3:eth1"]
+    - endpoints: ["dc01leaf03:eth4", "client2:eth1"]
+    - endpoints: ["dc01leaf02:eth4", "client4:eth1"]
+    - endpoints: ["dc01border01:eth5", "dc01fw01:eth1"]
+    - endpoints: ["dc01border02:eth5", "dc01fw01:eth3"]
+    - endpoints: ["dc01fw01:eth2", "pe1:eth1"]
